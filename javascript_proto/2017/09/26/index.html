@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="FantasyGao"><link rel="icon" href="../../../../i.jpg"><title>FantasyGao's Blog</title><meta name="description"><link rel="alternate" type="application/rss+xml" title="FantasyGao's Blog" href="../../../../atom.xml"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel="stylesheet" href="../../../../css/main.css"><link rel="stylesheet" href="../../../../css/highlight.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800"></head><body><nav class="navbar navbar-default navbar-fixed-top navbar-custom"><div class="container-fluid"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="../../../../index.html" class="navbar-brand">FantasyGao's Blog</a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><a href="../../../../archives">Archive</a></li><li><a href="https://github.com/FantasyGao">Github</a></li><li><a href="../../../../about/">About</a></li></ul></div><div class="avatar-container"><div class="avatar-img-border"><a href="../../../../index.html"><img src="../../../../i.jpg" class="avatar-img"></a></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>Javascript 原型链</h1><p class="post-meta">Posted on 9月 26 2017</p></div></div></div></div></div></header><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><article role="main" class="blog-post"><h3 id="示意图："><a href="#示意图：" class="headerlink" title="示意图："></a>示意图：</h3><p><img src="https://github.com/FantasyGao/About_Node/blob/master/javascript_proto/proto.png?raw=true" alt="proto"></p>
+<pre><code class="javascript">function Person(name){
+    this.name = name
+}
+
+var me = new Person(&#39;FantasyGao&#39;)
+var obj = {}
+</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li>Object,Function,自定义函数类（Person）有prototype属性，其余没有</li>
+<li>Function的peototype属性与<strong>proto</strong>属性指向同一内容(Function.<strong>proto</strong>===Function.prototype)</li>
+<li>由构造函数生成的对象与直接定义的对象原型链有差异（me.<strong>proto</strong>.<strong>proto</strong>===obj.<strong>proto</strong>)</li>
+<li>对象的constructor属性即它<strong>proto</strong>属性被prototype指向的值(me.constructor===Person,me.<strong>proto</strong>.constructor===Person)</li>
+<li>任何对象由原型链查找到顶端为null(Object.prototype.<strong>proto</strong>===null)</li>
+</ol>
+<pre><code class="javascript">function Person(name){
+    this.name = name
+}
+
+Person.prototype.sayName = function(){
+    console.log(this===me)       //true 
+    console.log(this.__proto__===Person.prototype)       //true 
+    return this.name
+}
+
+var me = new Person(&#39;FantasyGao&#39;)
+
+var obj = {}
+
+me.sayName()
+
+
+console.log(me.constructor===Person)                                     //true  实例对象指向Person
+console.log(me.__proto__.constructor===Person)                           //true  实例对象的__proto__指向Object
+console.log(obj.constructor===Object)                                    //true  定义对象指向Object
+console.log(obj.__proto__.constructor===Object)                          //true  定义对象的__proto__指向Object
+console.log(Person.constructor===Function)                               //true  构造函数对象指向Function
+console.log(Person.__proto__.__proto__.constructor===Object)                     //true  构造函数对象的__proto__.__proto__指向Object
+console.log(Person.__proto__.constructor===Function)                            //true Object.prototype的__proto__即null
+console.log(Function.constructor===Function)                             //true  Function函数对象指向Function
+console.log(Function.__proto__.constructor===Function)                   //true  Function函数对象的__proto__指Function
+console.log(Object.constructor===Function)                               //true  Object指向Function
+console.log(Object.__proto__.constructor===Function)                     //true  Object的__proto__指向Function
+
+console.log(me.__proto__===Person.prototype)                              //true 实例对象的__proto__即构造函数的prototype
+console.log(obj.__proto__===Object.prototype)                             //true 定义对象的__proto__即Object的prototype
+console.log(Person.__proto__===Function.prototype)                        //true 构造函数对象的__proto__即Function的prototype
+console.log(Object.__proto__===Function.prototype)                        //true Object的__proto__即Function的prototype
+console.log(Function.__proto__===Function.prototype)                      //true Function的__proto__即Function的prototype
+console.log(Function.prototype.__proto__===Object.prototype)              //true Function.prototype的__proto__即Object的prototype
+
+console.log(me.__proto__.__proto__===Person.__proto__.__proto__)          //true 实例对象的__proto__的__proto__的__proto__即null
+console.log(me.__proto__.__proto__===obj.__proto__)                       //true 实例对象的__proto__的__proto__的__proto__即null
+
+console.log(Function.prototype.__proto__.__proto__===null)                //true Function.prototype的__proto__的__proto__即null
+console.log(Person.__proto__.__proto__.__proto__===null)                  //true Object.prototype的__proto__即null
+console.log(Object.prototype.__proto__===null)                            //true Object.prototype的__proto__即null
+console.log(me.__proto__.__proto__.__proto__===null)                      //true 实例对象的__proto__的__proto__的__proto__即null
+console.log(obj.__proto__.__proto__===null)                               //true 定义对象的__proto__的__proto__即null
+
+
+console.log(me.prototype)                                                 //undefined
+console.log(obj.prototype)                                                //undefined
+console.log(Person.__proto__.prototype)                                   //undefined
+console.log(me.__proto__.prototype)                                        //undefined
+console.log(me.__proto__.__proto__.prototype)                                //undefined   
+
+console.log(typeof me) // object
+console.log(typeof obj) // object
+console.log(typeof Person) // function
+console.log(typeof me.__proto__) // object
+console.log(typeof obj.__proto__) // object
+
+console.log(typeof Person.__proto__)  //function
+console.log(typeof Function.__proto__)  //function
+console.log(typeof Object.__proto__)  //function
+</code></pre>
+</article><ul class="pager blog-pager"></ul><!-- 来必力City版安装代码--><div id="lv-container" data-id="city" data-uid="MTAyMC8zMTA1MC83NTk4"><script type="text/javascript">(function(d, s) {
+var j, e = d.getElementsByTagName(s)[0];
+if (typeof LivereTower === 'function') { return; }
+j = d.createElement(s);
+j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+j.async = true;
+e.parentNode.insertBefore(j, e);
+})(document, 'script');</script><noscript>为正常使用来必力评论功能请激活JavaScript</noscript></div><!-- City版安装代码已完成// JiaThis Button BEGIN--><script type="text/javascript">var jiathis_config = {data_track_clickback:'true'};</script><script type="text/javascript" src="http://v3.jiathis.com/code/jiathis_r.js?type=left&amp;btn=l2.gif&amp;uid=2109238" charset="utf-8"></script><!-- JiaThis Button END--></div></div></div><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><ul class="list-inline text-center footer-links"><li><a href="https://github.com/FantasyGao" title="GitHub"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-github"></i></span></a></li><li><a href="/atom.xml" title="RSS"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-rss"></i></span></a></li><li><a href="https://twitter.com/FantasyGao1" title="Twitter"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-twitter"></i></span></a></li><li><a href="gaotr.fg@gmail.com" title="Email me"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-stack-1x fa-inverse fa-envelope"></i></span></a></li></ul><p class="copyright text-muted">© FantasyGao • 2017 • <a href="mailto:undefined"></a>
+</p><p class="theme-by text-muted">Theme by
+<a href="https://github.com/twoyao/beautiful-hexo">beautiful-hexo</a></p></div></div></div></footer><script src="//cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script><script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="../../../../js/main.js"></script><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script></body></html>

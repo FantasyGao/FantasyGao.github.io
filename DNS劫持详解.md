@@ -37,8 +37,8 @@ ping: cannot resolve dadasdasdsadsadsa.com.cn: Unknown host
 现在网络普及太快太广，各种安全问题也层出不穷，记得之前收到不封邮件，我也没多想打开点了一下连接，因为是在手机上，打开链接的域名也没有展示出来，只有中文展示“邮箱登录”，界面是qq邮箱的登录界面，我这输完点击登录没有反应，觉得有点不对，把链接拷出来在pc上打开发现，点击确定就会把账号和密码明文提交上去，取出接口后写了一个程序，死循环提交数据大概3，4个小时之后，发现对方挂了... 后来觉得很有意思，但是也不免提升了安全意识。
 
 
-参考文章： 
-[域名系统](https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F)
-[移动互联网时代，如何优化你的网络 —— 域名解析篇](https://yq.aliyun.com/articles/58967?spm=5176.100244.teamconlist.7.WOFDYX)
+参考文章：  
+[域名系统](https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F)  
+[移动互联网时代，如何优化你的网络 —— 域名解析篇](https://yq.aliyun.com/articles/58967?spm=5176.100244.teamconlist.7.WOFDYX)  
 https://juejin.im/post/59ba146c6fb9a00a4636d8b6
 
